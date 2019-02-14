@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  web:
+    image: webdevops/php-nginx-dev:7.2
+    volumes:
+      - ./:/app
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+      WEB_ALIAS_DOMAIN: "rulengine.local"
+      XDEBUG_REMOTE_CONNECT_BACK: 1
+
+    depends_on:
+      - db
+    networks:
+      rulengine:
+        ipv4_address: 10.110.100.2
+
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: rulengine
+      MYSQL_USER: rulengine
+      MYSQL_PASSWORD: rulengine
+    volumes:
+      - rulenginedbdata:/var/lib/mysql
+    networks:
+      rulengine:
+        ipv4_address: 10.110.100.3
+
+volumes:
+  rulenginedbdata:
+
+networks:
+  rulengine:
+    ipam:
+      config:
+        - subnet: 10.110.100.0/24
