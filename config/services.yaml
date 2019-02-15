@@ -16,7 +16,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,RuleEngine}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -26,3 +26,25 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\RuleEngine\Messenger\RuleEngineHandler:
+        tags: [messenger.message_handler]
+
+
+    App\RuleEngine\Actions\CreateVoucher\CreateVoucherActionType:
+        tags:
+            - { name: 'action_type', code: 'create_voucher' }
+    App\RuleEngine\ConditionTypeFactory:
+        calls:
+            - method: registerConditionType
+              arguments: ['data_comparison', App\RuleEngine\Conditions\DataComparison\DataComparisonConditionType]
+    App\RuleEngine\ActionTypeFactory: ~
+    App\RuleEngine\EventTypeFactory:
+        calls:
+            - method: registerEvent
+              arguments: ['order_submitted', App\RuleEngine\Events\OrderSubmitted\OrderSubmittedEventType]
+            - method: registerEvent
+              arguments: ['asd', App\RuleEngine\Events\AsdEventType]
+
+    App\RuleEngine\ContextDefinitionBuilder: ~
+
+    App\RuleEngine\Validator\Constraint\ContextDefinitionValidator: ~

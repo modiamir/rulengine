@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Condition index{% endblock %}
+
+{% block body %}
+    <h1>Condition index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Code</th>
+                <th>Parameters</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for condition in conditions %}
+            <tr>
+                <td>{{ condition.id }}</td>
+                <td>{{ condition.code }}</td>
+                <td>{{ condition.parameters ? condition.parameters|json_encode : '' }}</td>
+                <td>
+                    <a href="{{ path('condition_show', {'id': condition.id, 'rule': rule.id}) }}">show</a>
+                    <a href="{{ path('condition_edit', {'id': condition.id, 'rule': rule.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <label for="condition-type-add">Add condition type:</label>
+    <select id="condition-type-add">
+        {% for condition_type in condition_types %}
+            <option value="">... create condition type ... </option>
+            <option value="{{ path('condition_new', {rule: rule.id, conditionType: condition_type}) }}">{{ condition_type }}</option>
+        {% endfor %}
+    </select>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(document).on('change', 'select#condition-type-add', function (event) {
+                if ($(this).val().length > 0) {
+                    window.location.href = $(this).val();
+                }
+            })
+        })
+    </script>
+{% endblock %}

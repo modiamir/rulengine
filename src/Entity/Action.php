@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ActionRepository")
  */
-class Event implements BelongsToRuleInterface
+class Action implements BelongsToRuleInterface
 {
     /**
      * @ORM\Id()
@@ -22,10 +22,15 @@ class Event implements BelongsToRuleInterface
     private $code;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Rule", inversedBy="event", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Rule", inversedBy="actions")
      * @ORM\JoinColumn(nullable=false)
      */
     private $rule;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $parameters = [];
 
     public function getId(): ?int
     {
@@ -49,9 +54,21 @@ class Event implements BelongsToRuleInterface
         return $this->rule;
     }
 
-    public function setRule(Rule $rule): self
+    public function setRule(?Rule $rule): self
     {
         $this->rule = $rule;
+
+        return $this;
+    }
+
+    public function getParameters(): ?array
+    {
+        return $this->parameters;
+    }
+
+    public function setParameters(array $parameters): self
+    {
+        $this->parameters = $parameters;
 
         return $this;
     }

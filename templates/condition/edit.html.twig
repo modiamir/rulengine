@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Condition{% endblock %}
+
+{% block body %}
+    <h1>Edit Condition</h1>
+
+    {{ include('condition/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <p>
+        {{ show_context(context)|raw }}
+    </p>
+    <a href="{{ path('condition_index', {'rule': rule.id}) }}">back to list</a>
+
+    {{ include('condition/_delete_form.html.twig') }}
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery.json-viewer@1.1.0/json-viewer/jquery.json-viewer.css">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/jquery.json-viewer@1.1.0/json-viewer/jquery.json-viewer.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.json-renderer').jsonViewer($('.json-renderer').data('json'), {collapsed: true});
+        })
+    </script>
+{% endblock %}
